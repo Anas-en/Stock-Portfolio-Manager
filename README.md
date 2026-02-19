@@ -1,115 +1,250 @@
-Since you have your schema ready, you can integrate it directly into your documentation. This helps anyone reviewing your code (like a CS50 TA) understand exactly how your data is structured.
-
-Here is the updated, complete **README.md** file for your finance app.
-
----
-
-# C$50 Finance
-
-### **Project Overview**
-
-**C$50 Finance** is a web-based tool developed as part of **CS50x: Introduction to Computer Science**. The application allows users to manage a virtual stock portfolio by "buying" and "selling" stocks using real-time market data. Each user starts with a virtual balance of $10,000.00 to simulate real-world trading.
+**Corrected version of your request:**
+Now give me a new `README.md` file.
 
 ---
 
-### **Features**
+# 📈 CS50 Finance – Stock Trading Web Application
 
-* **Portfolio Tracking (`/`)**: A dynamic dashboard that displays all currently owned stocks, their quantities, current market prices, and the total value of the user's assets.
-* **Stock Lookups (`/quote`)**: Allows users to check the real-time price of any stock by its ticker symbol using the IEX API.
-* **Trading (`/buy` & `/sell`)**: Enables users to purchase and liquidate stocks. The app validates sufficient funds/shares before executing and updating the database.
-* **Audit History (`/history`)**: Provides a full chronological log of every transaction made by the user, including the execution price and timestamp.
-* **Security Enhancement (`/change_password`)**: A custom feature allowing users to update their account credentials securely using `scrypt` hashing.
+A full-stack web application built as part of **CS50's Introduction to Computer Science** by **Harvard University**.
+
+This project simulates a real-world stock trading platform where users can register, log in, buy and sell stocks using real-time market data, track portfolio performance, view transaction history, and securely change their password.
 
 ---
 
-### **Technical Implementation**
+# 🚀 Features
 
-* **Backend**: Python (Flask)
-* **Database**: SQLite (managed via the `cs50` SQL library)
-* **Security**: `werkzeug.security` for hashing passwords and `flask_session` for session management.
-* **Frontend**: HTML5, CSS3 (Bootstrap), and Jinja2 templating.
+* User Registration & Login
+* Secure Password Hashing (scrypt)
+* Password Change Functionality
+* Real-Time Stock Quote Lookup
+* Buy Stocks with Virtual Cash
+* Sell Owned Stocks
+* Portfolio Dashboard
+* Transaction History
+* Persistent Database Storage
+* Flash Messaging for User Feedback
 
 ---
 
-### **Database Schema**
+# 🛠 Tech Stack
 
-The application uses the following relational structure in `finance.db`:
+| Layer          | Technology                |
+| -------------- | ------------------------- |
+| Backend        | Python                    |
+| Framework      | Flask                     |
+| Database       | SQLite                    |
+| ORM            | CS50 SQL Library          |
+| Frontend       | HTML, Bootstrap           |
+| Templating     | Jinja2                    |
+| Authentication | Flask-Session             |
+| Security       | Werkzeug (scrypt hashing) |
+| API            | IEX Cloud (stock data)    |
 
-#### **1. Users Table**
+---
 
-Stores authentication details and the current liquid cash balance.
-
-```sql
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-    username TEXT NOT NULL, 
-    hash TEXT NOT NULL, 
-    cash NUMERIC NOT NULL DEFAULT 10000.00
-);
-CREATE UNIQUE INDEX username ON users (username);
+# 📂 Project Structure
 
 ```
-
-#### **2. Transactions Table**
-
-A ledger recording every trade executed on the platform.
-
-```sql
-CREATE TABLE transactions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    user_id TEXT NOT NULL,
-    stock TEXT NOT NULL,
-    timeStamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    purchasePRICE REAL NOT NULL,
-    shares INTEGER NOT NULL, 
-    txn_type VARCHAR(20) NOT NULL DEFAULT 'BUY',
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-CREATE INDEX user_idx ON transactions(user_id);
-
-```
-
-#### **3. Shares Table**
-
-An optimized table tracking current aggregate holdings for each user.
-
-```sql
-CREATE TABLE shares (
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-    user_id TEXT NOT NULL, 
-    stock TEXT NOT NULL, 
-    no_shares INTEGER NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-CREATE INDEX shares_idx ON shares(user_id);
-
+finance/
+│── app.py
+│── helpers.py
+│── requirements.txt
+│── finance.db
+│
+├── templates/
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── quote.html
+│   ├── quoted.html
+│   ├── buy.html
+│   ├── sell.html
+│   ├── history.html
+│   └── password.html
+│
+└── static/
+    └── styles.css
 ```
 
 ---
 
-### **Installation**
+# 🗄 Database Schema
 
-1. **Extract the project**:
-```bash
-cd finance
+## users
+
+| Column   | Type    | Description                     |
+| -------- | ------- | ------------------------------- |
+| id       | INTEGER | Primary Key                     |
+| username | TEXT    | Unique username                 |
+| hash     | TEXT    | Hashed password                 |
+| cash     | NUMERIC | User balance (default 10000.00) |
+
+---
+
+## transactions
+
+| Column    | Type     | Description                |
+| --------- | -------- | -------------------------- |
+| id        | INTEGER  | Primary Key                |
+| user_id   | INTEGER  | Foreign key → users.id     |
+| stock     | TEXT     | Stock symbol               |
+| timestamp | DATETIME | Auto timestamp             |
+| price     | REAL     | Stock price at transaction |
+| shares    | INTEGER  | Number of shares           |
+| txn_type  | TEXT     | BUY or SELL                |
+
+---
+
+## shares
+
+| Column    | Type    | Description      |
+| --------- | ------- | ---------------- |
+| id        | INTEGER | Primary Key      |
+| user_id   | INTEGER | Foreign key      |
+| stock     | TEXT    | Stock symbol     |
+| no_shares | INTEGER | Current holdings |
+
+---
+
+# 🔐 Authentication & Security
+
+* Passwords hashed using `generate_password_hash()` with:
+
+  * Method: `scrypt`
+  * Salt length: 16
+* Password verification via `check_password_hash()`
+* Protected routes using `@login_required`
+* Server-side sessions (filesystem-based)
+* Password change requires:
+
+  * Correct current password
+  * New password confirmation
+  * New password different from old
+
+---
+
+# ⚙️ Installation & Setup
+
+## 1️⃣ Clone Repository
 
 ```
-
-
-2. **Set up the API Key**:
-Obtain a key from [IEX Cloud](https://www.google.com/search?q=https://iexcloud.io/) and export it:
-```bash
-export API_KEY=your_public_key_here
-
+git clone https://github.com/yourusername/cs50-finance.git
+cd cs50-finance
 ```
 
+---
 
-3. **Run the application**:
-```bash
+## 2️⃣ Install Dependencies
+
+```
+pip install -r requirements.txt
+```
+
+---
+
+## 3️⃣ Set API Key
+
+Mac/Linux:
+
+```
+export API_KEY=your_api_key
+```
+
+Windows:
+
+```
+set API_KEY=your_api_key
+```
+
+---
+
+## 4️⃣ Run Application
+
+```
 flask run
-
 ```
 
+Open in browser:
 
+```
+http://127.0.0.1:5000
+```
 
 ---
+
+# 📊 Application Workflow
+
+## Registration
+
+* User creates account
+* Password is hashed
+* Default cash balance = $10,000
+
+## Buying Stocks
+
+* Validate symbol
+* Validate shares (positive integer)
+* Check sufficient balance
+* Deduct cash
+* Insert transaction
+* Update shares table
+
+## Selling Stocks
+
+* Validate ownership
+* Validate share quantity
+* Add cash
+* Insert transaction
+* Update or delete share record
+
+## Portfolio View
+
+* Fetch current holdings
+* Fetch real-time prices
+* Calculate total stock value
+* Display:
+
+  * Individual stock values
+  * Cash balance
+  * Total portfolio value
+
+---
+
+# 🧠 Key Concepts Demonstrated
+
+* RESTful Routing
+* SQL Queries (SELECT, INSERT, UPDATE, DELETE)
+* Foreign Key Relationships
+* Session-Based Authentication
+* API Integration
+* Server-Side Rendering
+* Input Validation
+* Database Normalization
+
+---
+
+# 📌 Future Improvements
+
+* Portfolio performance charts
+* Transaction filtering
+* Search & sorting
+* Improved UI styling
+* Email-based password reset
+* Deployment on Render
+
+---
+
+# 👨‍💻 Author
+
+Mohd Anas
+CS50 Finance Project
+Full Stack Web Development Practice
+
+---
+
+If you want, I can also:
+
+* Optimize this for GitHub presentation (with badges & screenshots section)
+* Write a short submission description for CS50 grader
+* Review your entire project professionally as if grading it
+* Help you deploy it live
