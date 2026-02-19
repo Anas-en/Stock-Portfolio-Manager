@@ -1,0 +1,23 @@
+CREATE TABLE transactions
+    (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    user_id TEXT NOT NULL,
+    stock TEXT NOT NULL ,
+    timeStamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    purchasePRICE REAL NOT NULL,
+    shares INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id))
+
+
+CREATE INDEX user_idx ON transactions(user_id);
+
+
+CREATE TABLE shares (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id TEXT NOT NULL
+, stock TEXT NOT NULL , shares INTERGER NOT NULL,
+FOREIGN KEY (user_id ) REFERENCES users(id));
+
+CREATE INDEX shares_idx ON shares(user_id)
+
+ALTER TABLE transactions ADD txn_type VARCHAR(20) NOT NULL DEFAULT 'BUY';
+
+
+UPDATE shares SET no_shares = ? WHERE user_id = ? AND stock = symbol

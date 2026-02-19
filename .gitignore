@@ -1,0 +1,17 @@
+# Flask/Python environment
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+env/
+
+# CS50 / Session Data
+flask_session/
+
+# Databases 
+finance.db
+
+# OS specific files
+.DS_Store
+Thumbs.db
