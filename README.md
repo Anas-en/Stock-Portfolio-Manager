@@ -195,10 +195,3 @@ CS50 Finance Project
 Full Stack Web Development Practice
 
 ---
-
-If you want, I can also:
-
-* Optimize this for GitHub presentation (with badges & screenshots section)
-* Write a short submission description for CS50 grader
-* Review your entire project professionally as if grading it
-* Help you deploy it live
