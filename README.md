@@ -36,7 +36,7 @@ This project simulates a real-world stock trading platform where users can regis
 | Templating     | Jinja2                    |
 | Authentication | Flask-Session             |
 | Security       | Werkzeug (scrypt hashing) |
-| API            | IEX Cloud (stock data)    |
+| API            | CS50's own finance        |
 
 ---
 
