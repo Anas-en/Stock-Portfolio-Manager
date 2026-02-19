@@ -1,5 +1,3 @@
-**Corrected version of your request:**
-Now give me a new `README.md` file.
 
 ---
 
